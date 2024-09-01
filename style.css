@@ -1,0 +1,49 @@
+:root {
+    --color: #ffffff;
+    --background: #000;
+    --size: 1.2;
+    --glow: 1.9;
+    --animation: terminal-blink;
+}
+
+.terminal a[href] {
+    transition-property: color, background-color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+}
+
+.directory,
+.command {
+    --color: hsl(241, 100%, 54%);
+    color: var(--color);
+    cursor: pointer;
+    --glow: 1.5;
+    transition: --color 0.4s linear;
+}
+
+.directory:hover,
+.command:hover {
+    --color: hsl(190, 100%, 50%);
+}
+
+.item {
+    --color: hsl(0, 0%, 100%);
+    color: var(--color);
+    transition: --color 0.4s linear;
+}
+
+.item:hover {
+    --color: hsl(342, 100%, 50%);
+}
+
+.terminal a[href] {
+    --color: hsl(0, 0%, 100%);
+    color: var(--color);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: color 0.4s linear;
+}
+
+.terminal a[href]:hover {
+    --color: hsl(342, 100%, 50%);
+}
