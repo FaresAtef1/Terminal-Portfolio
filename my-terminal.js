@@ -242,11 +242,44 @@ const term = $('body').terminal(commands, {
         const { name, rest } = $.terminal.parse_command(cmd);
         if (['cd', 'ls'].includes(name)) {
             if (rest.startsWith('~/')) {
-                const allDirs = Object.values(directories).flat();
-                return allDirs.map(dir => `~/${dir}`);
-            }
-            if (cwd === root) {
-                return Object.keys(directories);
+                const path = rest.substring(2);
+                let allDirs;
+                if (path.split('/').length - 1 === 0) {
+                    allDirs = Object.keys(directories);
+                    return allDirs.map(dir => `~/${dir}`);
+                } else if (path.split('/').length - 1 === 1) {
+                    const dirs = path.split('/');
+                    const dir0 = dirs[0];
+                    if (dir0 in directories) {
+                        allDirs = Object.keys(directories[dir0]);
+                        console.log(allDirs);
+                        return allDirs.map(dir => `~/${dir0}/${dir}`);
+                    } else {
+                        return [];
+                    }
+                }
+            } else {
+                let level = rest.split('/').length - 1;
+                if (level === 0) {
+                    if (cwd === root) {
+                        return Object.keys(directories);
+                    }
+                    else {
+                        let curr_dir = cwd.substring(cwd.lastIndexOf('/') + 1);
+                        allDirs = Object.keys(directories[curr_dir]);
+                        return allDirs.map(dir => `${dir}`);
+                    }
+                } else if (level === 1) {
+                    let dirs = rest.split('/');
+                    let dir0 = dirs[0];
+                    if (dir0 in directories) {
+                        allDirs = Object.keys(directories[dir0]);
+                        return allDirs.map(dir => `${dir0}/${dir}`);
+                    }
+                    else {
+                        return [];
+                    }
+                }
             }
         }
         return Object.keys(commands);
@@ -254,8 +287,6 @@ const term = $('body').terminal(commands, {
     exit: false,
     prompt
 });
-
-// term.exec('help', { typing: true, delay: 100 });
 
 term.on('click', '.command', function () {
     const command = $(this).text();
